@@ -134,7 +134,7 @@
             }
             partten[pos] = currentRole;
             if (checkWin(partten, currentRole)) {
-                alert(currentRole === '1' ? '❌' : '⭕️' + 'is win');
+                alert((currentRole === 1 ? '❌' : '⭕️') + 'is win');
             }
             currentRole = 3 - currentRole;
             show();
