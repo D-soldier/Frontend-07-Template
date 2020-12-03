@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .chess {
+            width: 100px;
+            height: 100px;
+            border: solid 1px white;
+            background-color: chartreuse;
+            vertical-align: middle;
+            display: inline-block;
+            line-height: 100px;
+            font-size: 50px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <script>
+        let partten = [
+            1, 0, 0,
+            0, 2, 0,
+            0, 0, 0
+        ]
+
+        let currentRole = 1;
+
+        function checkWin() {
+            for (let i = 0; i < 3; i++) {
+                let win = true;
+                for (let j = 0; j < 3; j++) {
+                    if (partten[i * 3 + j] !== currentRole) {
+                        win = false;
+                    }
+                }
+                return win;
+            }
+
+            for (let i = 0; i < 3; i++) {
+                let win = true;
+                for (let j = 0; j < 3; j++) {
+                    if (partten[i + j * 3] !== currentRole) {
+                        win = false;
+                    }
+                }
+                return win
+            }
+            {
+                let win = true;
+                for (let i = 0; i < 3; i++) {
+                    if (partten[i * 3 + i] !== currentRole) {
+                        win = false;
+                    }
+                }
+                return win;
+            }
+            {
+                let win = true;
+                for (let i = 0; i < 3; i++) {
+                    if (partten[i * 3 + 2 - i] !== currentRole) {
+                        win = false;
+                    }
+                }
+                return win;
+            }
+        }
+
+        function add(line, pos) {
+            let cell = partten[line * 3 + pos];
+            if (cell !== 0) {
+                return;
+            }
+            partten[line * 3 + pos] = currentRole;
+            show();
+            if (checkWin()) {
+                alert('win');
+            }
+            currentRole = 3 - currentRole;
+            
+        }
+
+        function show() {
+            let container = document.getElementById('container');
+            container.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    let pos = partten[i * 3 + j];
+                    let area = document.createElement('div');
+                    area.className = 'chess';
+                    area.innerText = pos === 1 ? '❌' :
+                        pos === 2 ? '⭕️' : '';
+                    area.addEventListener('click', () => add(i, j));
+                    container.appendChild(area);
+                }
+                container.appendChild(document.createElement('br'));
+            }
+        }
+
+
+        show();
+    </script>
+</body>
+
+</html>
