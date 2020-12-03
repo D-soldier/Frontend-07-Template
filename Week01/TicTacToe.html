@@ -133,11 +133,17 @@
                 return;
             }
             partten[pos] = currentRole;
+            show();
+
+            
             if (checkWin(partten, currentRole)) {
-                alert((currentRole === 1 ? '❌' : '⭕️') + 'is win');
+                setTimeout(() => {
+                    alert((currentRole === 1 ? '❌' : '⭕️') + 'is win'); 
+                }, 100);
+                return false;
             }
             currentRole = 3 - currentRole;
-            show();
+            return true;
         }
 
         function computeMove() {
@@ -147,8 +153,10 @@
         }
 
         function userMove(line, pos) {
-            add( line * 3 + pos );
-            computeMove();
+            if (add( line * 3 + pos )) {
+                computeMove();
+            }
+            
         }
 
         function show() {
