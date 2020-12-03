@@ -24,65 +24,131 @@
     <div id="container"></div>
     <script>
         let partten = [
-            1, 0, 0,
-            0, 2, 0,
+            0, 0, 0,
+            0, 0, 0,
             0, 0, 0
         ]
 
         let currentRole = 1;
 
-        function checkWin() {
+        function checkWin(partten, role) {
             for (let i = 0; i < 3; i++) {
                 let win = true;
                 for (let j = 0; j < 3; j++) {
-                    if (partten[i * 3 + j] !== currentRole) {
+                    if (partten[i * 3 + j] !== role) {
                         win = false;
                     }
                 }
-                return win;
+                if ( win ) {
+                    return win;
+                }
             }
 
             for (let i = 0; i < 3; i++) {
                 let win = true;
                 for (let j = 0; j < 3; j++) {
-                    if (partten[i + j * 3] !== currentRole) {
+                    if (partten[i + j * 3] !== role) {
                         win = false;
                     }
                 }
-                return win
+                if ( win ) {
+                    return win;
+                }
             }
             {
                 let win = true;
                 for (let i = 0; i < 3; i++) {
-                    if (partten[i * 3 + i] !== currentRole) {
+                    if (partten[i * 3 + i] !== role) {
                         win = false;
                     }
                 }
-                return win;
+                if ( win ) {
+                    return win;
+                }
             }
             {
                 let win = true;
                 for (let i = 0; i < 3; i++) {
-                    if (partten[i * 3 + 2 - i] !== currentRole) {
+                    if (partten[i * 3 + 2 - i] !== role) {
                         win = false;
                     }
                 }
-                return win;
+                if ( win ) {
+                    return win;
+                }
+            }
+            return false;
+        }
+
+        function willWin(partten, role) {
+            for (let i = 0; i < 9; i++) {
+                if (partten[i]) {
+                    continue;
+                }
+                let newPartten = partten.slice();
+                newPartten[i] = role;
+                if (checkWin(newPartten, role)) {
+                    return i;
+                }
+            }
+            return null;
+        }
+
+        function bestChoice(partten, role) {
+            let p = willWin(partten, role);
+            if (p) {
+                // console.log('result:', 1);
+                return {
+                    point: p,
+                    result: 1
+                }
+            }
+            let result = -2;
+            let point = null;
+            for (let i = 0; i < 9; i++) {
+                if (partten[i]) {
+                    continue;
+                }
+                let newPartten = partten.slice();
+                newPartten[i] = role;
+                let r = bestChoice(newPartten, 3 - role);
+                r = r.result;
+                if (-r > result) {
+                    result = -r;
+                    point = i;
+                }
+            }
+            // console.log('result:', result);
+            return {
+                point: point,
+                result: point ? result : 0
             }
         }
 
-        function add(line, pos) {
-            let cell = partten[line * 3 + pos];
+       
+
+        function add(pos) {
+            let cell = partten[pos];
             if (cell !== 0) {
                 return;
             }
-            partten[line * 3 + pos] = currentRole;
-            show();
-            if (checkWin()) {
-                alert('win');
+            partten[pos] = currentRole;
+            if (checkWin(partten, currentRole)) {
+                alert(currentRole === '1' ? '❌' : '⭕️' + 'is win');
             }
             currentRole = 3 - currentRole;
-            
+            show();
+        }
+
+        function computeMove() {
+            let p = bestChoice(partten, currentRole);
+            console.log(p);
+            add( p.point );
+        }
+
+        function userMove(line, pos) {
+            add( line * 3 + pos );
+            computeMove();
         }
 
         function show() {
@@ -95,14 +161,12 @@
                     area.className = 'chess';
                     area.innerText = pos === 1 ? '❌' :
                         pos === 2 ? '⭕️' : '';
-                    area.addEventListener('click', () => add(i, j));
+                    area.addEventListener('click', () => userMove(i, j));
                     container.appendChild(area);
                 }
                 container.appendChild(document.createElement('br'));
             }
         }
-
-
         show();
     </script>
 </body>
