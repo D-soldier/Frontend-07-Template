@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            background-color: gray;
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            border-radius: 60px;
+            border-color: black;
+            border-style: solid;
+            border-width: 10px;
+        }
+
+        /* .open{
+            background-color: red;
+        } */
+
+        #green.open {
+            background-color: green;
+        }
+
+        #yello.open {
+            background-color: yellow;
+        }
+
+        #red.open {
+            background-color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="green"></div>
+    <div id="yello"></div>
+    <div id="red" class="open"></div>
+    <script>
+        function clearLight() {
+            let doms = document.getElementsByTagName('div');
+            for (let item of doms) {
+                item.classList.remove('open');
+            }
+        }
+
+        function openLight(light, times) {
+            return new Promise((resolve, reject) => {
+                clearLight();
+                let dom = document.getElementById(light);
+                dom.classList.add('open');
+                setTimeout(() => {
+                    resolve();
+                }, times * 1000);
+            })
+        }
+
+        function start() {
+            openLight('green', 5)
+                .then(() => {
+                    return openLight('yello', 2)
+                }).then(() => {
+                    return openLight('red', 4)
+                }).then(start)
+        }
+
+        async function go() {
+            while (1) {
+                await openLight('green', 5);
+                await openLight('yello', 2);
+                await openLight('red', 4)
+            }
+        }
+
+        go();
+
+    </script>
+</body>
+
+</html>
