@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function tokenize(str) {
+            let partten = /([0-9\.]+)|(\+)|(\-)|(\*)|(\/)|( )/g;
+            let tokenList = ['Number', '+', '-', '*', '/', 'WhiteSpace']
+            let result = null;
+            let tokens = []
+            while (true) {
+                result = partten.exec(str);
+                if (!result) return tokens;
+                for (let i = 1; i <= tokenList.length; i++) {
+                    if (result[i]) {
+                        console.log(tokenList[i - 1] + ':' + result[0]);
+                        if ( tokenList[i - 1] === 'WhiteSpace') continue;
+                        let token = {
+                            type: tokenList[i - 1],
+                            value: result[0]
+                        }
+                        tokens.push( token );
+                        break;
+                    }
+                }
+            }
+            return null;
+        }
+
+        let tokens = tokenize('12.34 + 234 * 12 / 32 - 12')
+        console.log( tokens );
+    </script>
+</body>
+
+</html>
